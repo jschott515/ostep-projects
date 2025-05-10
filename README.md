@@ -4,6 +4,19 @@
 Working through the projects for the textbook [OS: Three Easy Pieces](https://pages.cs.wisc.edu/~remzi/OSTEP/)
 
 ## Progress
-
+The following list contains completed projects and a summary of the changes made. Refer to **Prerequisites** and the project README for instructions on testing the code.
 - [initial-xv6](./initial-xv6/summary-of-changes.md)
 - TBD
+
+## Prerequisites
+Tested using Ubuntu 2024.04.1 (WSL)
+
+Install the following dependencies:
+- build-essential
+- expect
+- gcc
+- gdb
+- make
+- qemu-system-x86
+
+xv6 source code obtained from [mit-pdos/xv6-public](https://github.com/mit-pdos/xv6-public)

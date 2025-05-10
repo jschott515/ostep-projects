@@ -1,0 +1,17 @@
+*-out
+
+# xv6 generated
+*.sym
+*.asm
+*.d
+*.out
+*.o
+initcode*
+*.img
+*.S
+**/src/_*
+**/src/bootblock
+**/src/entryother
+**/src/kernel
+**/src/mkfs
+**/src/test*

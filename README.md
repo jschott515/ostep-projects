@@ -1,7 +1,7 @@
 
 # Projects for an Operating Systems Class
 
-Working through the projects for the textbook [OS: Three Easy Pieces](https://pages.cs.wisc.edu/~remzi/OSTEP/)
+Working through the projects for the textbook [OS: Three Easy Pieces](https://pages.cs.wisc.edu/~remzi/OSTEP/). Originally forked from [remzi-arpacidusseau/ostep-projects](https://github.com/remzi-arpacidusseau/ostep-projects).
 
 ## Progress
 The following list contains completed projects and a summary of the changes made. Refer to **Prerequisites** and the project README for instructions on testing the code.

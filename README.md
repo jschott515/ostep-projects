@@ -5,6 +5,7 @@ Working through the projects for the textbook [OS: Three Easy Pieces](https://pa
 
 ## Progress
 The following list contains completed projects and a summary of the changes made. Refer to **Prerequisites** and the project README for instructions on testing the code.
+- [initial-reverse](./initial-reverse/summary-of-changes.md)
 - [initial-xv6](./initial-xv6/summary-of-changes.md)
 - TBD
 

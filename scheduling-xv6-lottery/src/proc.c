@@ -5,6 +5,7 @@
 #include "mmu.h"
 #include "x86.h"
 #include "proc.h"
+#include "pstat.h"
 #include "spinlock.h"
 
 struct {
@@ -142,6 +143,9 @@ userinit(void)
   safestrcpy(p->name, "initcode", sizeof(p->name));
   p->cwd = namei("/");
 
+  p->tickets = 1;  // process gets 1 ticket by default
+  p->ticks = 0;
+
   // this assignment to p->state lets other cores
   // run this process. the acquire forces the above
   // writes to be visible, and the lock is also needed
@@ -211,6 +215,9 @@ fork(void)
   safestrcpy(np->name, curproc->name, sizeof(curproc->name));
 
   pid = np->pid;
+
+  np->tickets = curproc->tickets;
+  np->ticks = 0;
 
   acquire(&ptable.lock);
 
@@ -294,6 +301,8 @@ wait(void)
         p->parent = 0;
         p->name[0] = 0;
         p->killed = 0;
+        p->tickets = 0;
+        p->ticks = 0;
         p->state = UNUSED;
         release(&ptable.lock);
         return pid;
@@ -309,6 +318,31 @@ wait(void)
     // Wait for children to exit.  (See wakeup1 call in proc_exit.)
     sleep(curproc, &ptable.lock);  //DOC: wait-sleep
   }
+}
+
+int
+settickets(int n)
+{
+  return 0;
+}
+
+int
+getpinfo(struct pstat* pst)
+{
+  struct proc* p;
+  acquire(&ptable.lock);
+
+  for(int i = 0; i < NPROC; i++)
+  {
+    p = &ptable.proc[i];
+    pst->inuse[i] = (int)(p->state != UNUSED);
+    pst->tickets[i] = p->tickets;
+    pst->pid[i] = p->pid;
+    pst->ticks[i] = p->ticks;
+  }
+
+  release(&ptable.lock);
+  return 0;
 }
 
 //PAGEBREAK: 42

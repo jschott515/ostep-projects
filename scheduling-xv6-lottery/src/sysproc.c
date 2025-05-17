@@ -6,6 +6,7 @@
 #include "memlayout.h"
 #include "mmu.h"
 #include "proc.h"
+#include "pstat.h"
 
 int
 sys_fork(void)
@@ -24,6 +25,25 @@ int
 sys_wait(void)
 {
   return wait();
+}
+
+int
+sys_settickets(void)
+{
+  int n;
+
+  if(argint(0, &n) < 0)
+    return -1;
+  return settickets(n);
+}
+
+int
+sys_getpinfo(void)
+{
+  struct pstat* pst;
+  if(argptr(0, (void*)&pst, sizeof(*pst)) < 0)
+    return -1;
+  return getpinfo(pst);
 }
 
 int

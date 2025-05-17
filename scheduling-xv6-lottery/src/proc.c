@@ -1,6 +1,7 @@
 #include "types.h"
 #include "defs.h"
 #include "param.h"
+#include "date.h"
 #include "memlayout.h"
 #include "mmu.h"
 #include "x86.h"
@@ -323,6 +324,12 @@ wait(void)
 int
 settickets(int n)
 {
+  if (n < 1)
+    return -1;  // non positive ticket counts are not allowed
+
+  struct proc *curproc = myproc();
+  curproc->tickets = n;
+
   return 0;
 }
 
@@ -359,6 +366,13 @@ scheduler(void)
   struct proc *p;
   struct cpu *c = mycpu();
   c->proc = 0;
+
+  struct rtcdate rtc;
+  cmostime(&rtc);
+  // seed the lottery scheduler with the time
+  srand(rtc.second);
+
+  int total_tickets, winning_ticket, current_ticket;
   
   for(;;){
     // Enable interrupts on this processor.
@@ -366,8 +380,25 @@ scheduler(void)
 
     // Loop over process table looking for process to run.
     acquire(&ptable.lock);
+
+    // Count how many tickets have been given to running processes
+    total_tickets = 0;
+    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
+      if(p->state == RUNNABLE)
+        total_tickets += p->tickets;
+
+    if (total_tickets == 0)
+      goto release;
+    winning_ticket = (unsigned int)rand() % total_tickets;
+
+    // Find the winning process
+    current_ticket = 0;
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
       if(p->state != RUNNABLE)
+        continue;
+
+      current_ticket += p->tickets;
+      if (winning_ticket >= current_ticket)
         continue;
 
       // Switch to chosen process.  It is the process's job
@@ -376,6 +407,7 @@ scheduler(void)
       c->proc = p;
       switchuvm(p);
       p->state = RUNNING;
+      p->ticks++;
 
       swtch(&(c->scheduler), p->context);
       switchkvm();
@@ -384,6 +416,8 @@ scheduler(void)
       // It should have changed its p->state before coming back.
       c->proc = 0;
     }
+
+release:
     release(&ptable.lock);
 
   }

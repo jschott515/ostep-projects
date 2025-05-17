@@ -124,6 +124,10 @@ int             wait(void);
 void            wakeup(void*);
 void            yield(void);
 
+// rand.c
+int             rand(void);
+void            srand(unsigned int);
+
 // swtch.S
 void            swtch(struct context**, struct context*);
 

@@ -1,17 +1,20 @@
 *-out
 
 # xv6 generated
-*.sym
-*.asm
-*.d
-*.out
-*.o
-initcode*
-*.img
-*.S
+**/src/*~
 **/src/_*
+**/src/*.o
+**/src/*.d
+**/src/*.asm
+**/src/*.sym
+**/src/*.img
+**/src/vectors.S
 **/src/bootblock
 **/src/entryother
+**/src/initcode
+**/src/initcode.out
 **/src/kernel
+**/src/kernelmemfs
 **/src/mkfs
-**/src/test*
+**/src/.gdbinit
+**/src/test_*
